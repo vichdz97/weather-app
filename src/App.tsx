@@ -72,7 +72,7 @@ function App() {
 						<h2 className="text-2xl">{location}</h2>
 						<h1 className="text-5xl">{Math.round(weatherData.main.temp)}&deg;</h1>
 						<div id="weather-condition" className="w-full flex items-center justify-center text-sm ">
-							<p className="mr-2">{weatherData.weather[0].description}</p>
+							<p className="mr-2">{weatherData.weather[0].main}</p>
 							<Cloud strokeWidth={1} />
 						</div>
 						<div className="w-3/4 flex justify-evenly text-sm">

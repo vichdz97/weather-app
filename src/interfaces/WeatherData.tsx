@@ -6,6 +6,6 @@ export default interface WeatherData {
         temp_min: number;
     };
     weather: [{
-        description: string;
+        main: string;
     }];
 }
