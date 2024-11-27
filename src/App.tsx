@@ -1,4 +1,4 @@
-import { Cloud, Navigation, Search, Sun } from "lucide-react";
+import { Cloud, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
@@ -10,7 +10,7 @@ const url = 'http://api.openweathermap.org/data/2.5/forecast';
 
 function App() {
 	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-	const [location, setLocation] = useState('Dallas');
+  	const [location, setLocation] = useState('Dallas');
 	const [error, setError] = useState('');
 
 	// Fetch weather data for the default location (Dallas)
@@ -38,25 +38,26 @@ function App() {
 		return location
 			.trim()
 			.split(/\s+/)
-			.map(word => word.charAt(0).toUpperCase + word.slice(1).toLowerCase())
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
 			.join(' ');
 	};
 
 	const handleSearch = () => {
 		// Format location
 		const formattedLocation = formatLocation(newLocation);
-		setLocation(formattedLocation);
-		setNewLocation('');
+        setLocation(formattedLocation);
+        setNewLocation('');
 	};
 
 	return (
-		<div className="flex flex-col items-center">
+		<div className="flex flex-col items-center bg-gradient-to-t from-cyan-300 to-blue-600">
+		{/* <div className="flex flex-col items-center bg-gradient-to-t from-orange-300 to-blue-900 to-90%"> */}
 			<div id="search-container" className="sm:relative md:absolute top-0 right-0 mt-5 md:m-5 flex">
-				<Search size={18} strokeWidth={1} color="gray" className="absolute translate-x-1/2 translate-y-1/2" />
+				<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 				<Input 
 					type="text" 
-					placeholder="Search" 
-					className="pl-8 rounded-lg" 
+					placeholder="Search"
+					className="pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white bg-blue-800" 
 					value={newLocation}
 					onChange={(e) => setNewLocation(e.target.value)}
 				/>
@@ -64,12 +65,8 @@ function App() {
 					<Search />
 				</Button>
 			</div>
-			<div className="w-[200px] p-5 m-5 flex flex-col items-center text-white bg-blue-400 rounded-2xl">
-				<div className="w-3/4 flex items-center justify-evenly">
-					<Navigation color="white" fill="white" size={14} />
-					<p className="text-xs">MY LOCATION</p>
-				</div>
 
+			<div className="w-[200px] p-5 m-5 flex flex-col items-center text-white">
 				{ weatherData ? (
 					<>
 						<h2 className="text-2xl">{location}</h2>
@@ -84,11 +81,10 @@ function App() {
 						</div>
 					</>
 				) : error ? (
-					<p className="text-red-500">{error}</p>
+					<p className="text-3xl">&mdash; &mdash;</p>
 				) : (
 					<p>Loading...</p>
 				)}
-
 			</div>
 		</div>
 	)
