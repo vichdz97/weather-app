@@ -1,4 +1,4 @@
-import { Search, Thermometer, Wind, Waves, Gauge, Cloud } from "lucide-react";
+import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
@@ -49,6 +49,17 @@ function App() {
         setNewLocation('');
 	};
 
+	const getWeatherIcon = (condition: string) => {
+		switch (condition) {
+			case "Clear": 
+				if (weatherData?.sys.pod == 'n') return <Moon strokeWidth={1.5} />;
+				return <Sun strokeWidth={1.5} />
+			case "Clouds": return <Cloud strokeWidth={1.5} />;
+			case "Rain": return <CloudRainWind strokeWidth={1.5} />;
+			default: return;
+		}
+	}
+
 	return (
 		<div className="flex flex-col items-center bg-gradient-to-t from-cyan-300 to-blue-600 to-90%">
 			<div id="search-container" className="sm:relative md:absolute top-0 right-0 mt-5 md:m-5 flex">
@@ -72,7 +83,7 @@ function App() {
 						<h1 className="text-5xl">{Math.round(weatherData.main.temp)}&deg;</h1>
 						<div id="weather-condition" className="w-full flex items-center justify-center">
 							<p className="mr-2">{weatherData.weather[0].main}</p>
-							<Cloud strokeWidth={1} />
+							{ getWeatherIcon(weatherData.weather[0].main) }
 						</div>
 						<div className="w-3/4 flex justify-evenly">
 							<p>H: {Math.round(weatherData.main.temp_max)}&deg;</p>

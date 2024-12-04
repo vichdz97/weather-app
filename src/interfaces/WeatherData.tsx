@@ -9,6 +9,9 @@ export default interface WeatherData {
         temp_max: number,
         temp_min: number,
     };
+    sys: {
+        pod: string;
+    };
     weather: [{
         main: string;
     }];
