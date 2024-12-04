@@ -5,6 +5,7 @@ import axios from "axios";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
+import { Switch } from "./components/ui/switch";
 
 const apiKey = 'e1dc67815f36dcc0e87dec2028704d37';
 const url = 'http://api.openweathermap.org/data/2.5/forecast';
@@ -12,6 +13,7 @@ const url = 'http://api.openweathermap.org/data/2.5/forecast';
 function App() {
 	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   	const [location, setLocation] = useState('Dallas');
+  	const [units, setUnits] = useState('imperial');
 	const [error, setError] = useState('');
 
 	// Fetch weather data for the default location (Dallas)
@@ -19,7 +21,7 @@ function App() {
 		async function fetchWeather() {
 			try {
 				setError('');
-				const response = await axios.get(`${url}?q=${location}&units=imperial&appid=${apiKey}`);
+				const response = await axios.get(`${url}?q=${location}&units=${units}&appid=${apiKey}`);
 				const data = response.data.list[0];
 				setWeatherData(data);
 				console.log(data);
@@ -31,7 +33,7 @@ function App() {
 		}
 
 		fetchWeather();
-	}, [location]);
+	}, [location, units]);
 
 	const [newLocation, setNewLocation] = useState('');
 
@@ -49,6 +51,10 @@ function App() {
         setLocation(formattedLocation);
         setNewLocation('');
 	};
+
+	const toggleUnits = () => {
+		units == 'imperial' ? setUnits('metric') : setUnits('imperial');
+	}
 
 	const getWeatherIcon = (condition: string) => {
 		switch (condition) {
@@ -75,6 +81,12 @@ function App() {
 				<Button onClick={handleSearch} className="bg-blue-400 rounded-lg">
 					<Search />
 				</Button>
+			</div>
+
+			<div className="flex items-center justify-evenly text-white text-sm">
+				<span>C&deg;</span>
+				<Switch defaultChecked={true} onCheckedChange={toggleUnits} className="m-2"/>
+				<span>F&deg;</span>
 			</div>
 
 			<div className="w-[200px] p-5 m-5 flex flex-col items-center text-white">
@@ -125,12 +137,18 @@ function App() {
 							<CardContent className="px-4 pb-4">
 								<div className="flex justify-between">
 									<p>Wind</p>
-									<p>{Math.round(weatherData.wind.speed)}<span className="ml-1">mph</span></p>
+									<p>
+										{Math.round(weatherData.wind.speed)}
+										<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
+									</p>
 								</div>
 								<hr className="my-3" />
 								<div className="flex justify-between">
 									<p>Gusts</p>
-									<p>{Math.round(weatherData.wind.gust)}<span className="ml-1">mph</span></p>
+									<p>
+										{Math.round(weatherData.wind.gust)}
+										<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
+									</p>
 								</div>
 								<hr className="my-3" />
 								<div className="flex justify-between">
