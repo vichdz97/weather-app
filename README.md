@@ -1,7 +1,7 @@
 # Weather App
 
 > [!NOTE]
-> Last Updated November 20, 2024
+> Last Updated December 3, 2024
 
 ## Live Demo
 [link]()
