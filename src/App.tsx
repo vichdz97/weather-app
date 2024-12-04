@@ -1,4 +1,4 @@
-import { Cloud, Search } from "lucide-react";
+import { Search, Thermometer, Wind, Waves, Gauge, Cloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
@@ -74,7 +74,6 @@ function App() {
 							<p className="mr-2">{weatherData.weather[0].main}</p>
 							<Cloud strokeWidth={1} />
 						</div>
-						<p>Feels Like: {Math.round(weatherData.main.feels_like)}&deg;</p>
 						<div className="w-3/4 flex justify-evenly">
 							<p>H: {Math.round(weatherData.main.temp_max)}&deg;</p>
 							<p>L: {Math.round(weatherData.main.temp_min)}&deg;</p>
@@ -84,6 +83,65 @@ function App() {
 					<p className="text-3xl">&mdash; &mdash;</p>
 				) : (
 					<p>Loading...</p>
+				)}
+			</div>
+
+			<div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 text-white text-sm">
+				{ weatherData && (
+					<>
+						<div className="flex flex-col relative p-3 rounded-lg bg-blue-600/30">
+							<div className="flex items-center mb-3">
+								<Thermometer strokeWidth={1.5} className="mr-1" />
+								<span>FEELS LIKE</span>
+							</div>
+							<h3 className="text-2xl">{Math.round(weatherData.main.feels_like)}&deg;</h3>
+							{ Math.round(weatherData.main.feels_like) < Math.round(weatherData.main.temp) ? (
+								<p className="absolute bottom-0 mr-3 mb-3">Wind is making it feel colder.</p>
+							) : null}
+						</div>
+						<div className="p-3 rounded-lg bg-blue-600/30">
+							<div className="flex items-center mb-3">
+								<Wind strokeWidth={1.5} className="mr-2" />
+								<span>WIND</span>
+							</div>
+							<div className="flex justify-between">
+								<p>Wind</p>
+								<p>{Math.round(weatherData.wind.speed)} mph</p>
+							</div>
+							<hr className="my-3" />
+							<div className="flex justify-between">
+								<p>Gusts</p>
+								<p>{Math.round(weatherData.wind.gust)} mph</p>
+							</div>
+							<hr className="my-3" />
+							<div className="flex justify-between">
+								<p>Direction</p>
+								<p>{Math.round(weatherData.wind.deg)}&deg;</p>
+							</div>
+						</div>
+						<div className="p-3 rounded-lg bg-blue-600/30">
+							<div className="flex items-center mb-3">
+								<Waves strokeWidth={1.5} className="mr-2" />
+								<span>HUMIDITY</span>
+							</div>
+							<h3 className="text-2xl">{Math.round(weatherData.main.humidity)}&#37;</h3>
+						</div>
+						<div className="p-3 rounded-lg bg-blue-600/30">
+							<div className="flex items-center mb-3">
+								<Gauge strokeWidth={1.5} className="mr-2" />
+								<span>PRESSURE</span>
+							</div>
+							<div className="flex justify-between">
+								<p>Ground Level</p>
+								<p>{Math.round(weatherData.main.grnd_level)} hPa</p>
+							</div>
+							<hr className="my-3" />
+							<div className="flex justify-between">
+								<p>Sea Level</p>
+								<p>{Math.round(weatherData.main.sea_level)} hPa</p>
+							</div>
+						</div>
+					</>
 				)}
 			</div>
 		</div>
