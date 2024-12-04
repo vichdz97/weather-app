@@ -4,6 +4,7 @@ import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
 
 const apiKey = 'e1dc67815f36dcc0e87dec2028704d37';
 const url = 'http://api.openweathermap.org/data/2.5/forecast';
@@ -61,8 +62,8 @@ function App() {
 	}
 
 	return (
-		<div className="flex flex-col items-center bg-gradient-to-t from-cyan-300 to-blue-600 to-90%">
-			<div id="search-container" className="sm:relative md:absolute top-0 right-0 mt-5 md:m-5 flex">
+		<div className="flex flex-col items-center overflow-auto bg-gradient-to-t from-slate-600 to-slate-400">
+			<div id="search-container" className="flex relative mt-5 md:absolute md:top-0 md:right-0 md:m-5">
 				<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 				<Input 
 					type="text" 
@@ -100,58 +101,74 @@ function App() {
 			<div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 text-white text-sm">
 				{ weatherData && (
 					<>
-						<div className="flex flex-col relative p-3 rounded-lg bg-blue-600/30">
-							<div className="flex items-center mb-3">
-								<Thermometer strokeWidth={1.5} className="mr-1" />
-								<span>FEELS LIKE</span>
-							</div>
-							<h3 className="text-2xl">{Math.round(weatherData.main.feels_like)}&deg;</h3>
-							{ Math.round(weatherData.main.feels_like) < Math.round(weatherData.main.temp) ? (
-								<p className="absolute bottom-0 mr-3 mb-3">Wind is making it feel colder.</p>
-							) : null}
-						</div>
-						<div className="p-3 rounded-lg bg-blue-600/30">
-							<div className="flex items-center mb-3">
-								<Wind strokeWidth={1.5} className="mr-2" />
-								<span>WIND</span>
-							</div>
-							<div className="flex justify-between">
-								<p>Wind</p>
-								<p>{Math.round(weatherData.wind.speed)} mph</p>
-							</div>
-							<hr className="my-3" />
-							<div className="flex justify-between">
-								<p>Gusts</p>
-								<p>{Math.round(weatherData.wind.gust)} mph</p>
-							</div>
-							<hr className="my-3" />
-							<div className="flex justify-between">
-								<p>Direction</p>
-								<p>{Math.round(weatherData.wind.deg)}&deg;</p>
-							</div>
-						</div>
-						<div className="p-3 rounded-lg bg-blue-600/30">
-							<div className="flex items-center mb-3">
-								<Waves strokeWidth={1.5} className="mr-2" />
-								<span>HUMIDITY</span>
-							</div>
-							<h3 className="text-2xl">{Math.round(weatherData.main.humidity)}&#37;</h3>
-						</div>
-						<div className="p-3 rounded-lg bg-blue-600/30">
-							<div className="flex items-center mb-3">
-								<Gauge strokeWidth={1.5} className="mr-2" />
-								<span>PRESSURE</span>
-							</div>
-							<div className="flex justify-between">
-								<p>Ground Level</p>
-								<p>{Math.round(weatherData.main.grnd_level)} hPa</p>
-							</div>
-							<hr className="my-3" />
-							<div className="flex justify-between">
-								<p>Sea Level</p>
-								<p>{Math.round(weatherData.main.sea_level)} hPa</p>
-							</div>
-						</div>
+						<Card className="relative">
+							<CardHeader className="p-3 pt-4">
+								<CardTitle>
+									<Thermometer strokeWidth={1.5} className="mr-1"/>
+									<span>FEELS LIKE</span>
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="text-3xl mb-20 sm:mb-4 px-4">
+								{Math.round(weatherData.main.feels_like)}&deg;
+							</CardContent>
+							{ Math.round(weatherData.main.feels_like) < Math.round(weatherData.main.temp) && (
+								<CardFooter className="absolute bottom-0 p-4">Wind is making it feel colder.</CardFooter>
+							)}
+						</Card>
+						<Card>
+							<CardHeader className="p-4 pb-3">
+								<CardTitle>
+									<Wind strokeWidth={1.5} className="mr-2"/>
+									<span>WIND</span>
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="px-4 pb-4">
+								<div className="flex justify-between">
+									<p>Wind</p>
+									<p>{Math.round(weatherData.wind.speed)}<span className="ml-1">mph</span></p>
+								</div>
+								<hr className="my-3" />
+								<div className="flex justify-between">
+									<p>Gusts</p>
+									<p>{Math.round(weatherData.wind.gust)}<span className="ml-1">mph</span></p>
+								</div>
+								<hr className="my-3" />
+								<div className="flex justify-between">
+									<p>Direction</p>
+									<p>{Math.round(weatherData.wind.deg)}&deg;</p>
+								</div>
+							</CardContent>
+						</Card>
+						<Card>
+							<CardHeader className="p-4 pb-3">
+								<CardTitle>
+									<Waves strokeWidth={1.5} className="mr-2" />
+									<span>HUMIDITY</span>
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="text-3xl px-4">
+								{Math.round(weatherData.main.humidity)}&#37;
+							</CardContent>
+						</Card>
+						<Card>
+							<CardHeader className="p-4 pb-3">
+								<CardTitle>
+									<Gauge strokeWidth={1.5} className="mr-2"/>
+									<span>PRESSURE</span>
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="px-4 pb-4">
+								<div className="flex justify-between items-center">
+									<p>Ground Level</p>
+									<p>{Math.round(weatherData.main.grnd_level)}<span className="ml-1">hPa</span></p>
+								</div>
+								<hr className="my-3" />
+								<div className="flex justify-between items-center">
+									<p>Sea Level</p>
+									<p>{Math.round(weatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
+								</div>
+							</CardContent>
+						</Card>
 					</>
 				)}
 			</div>
