@@ -50,8 +50,7 @@ function App() {
 	};
 
 	return (
-		<div className="flex flex-col items-center bg-gradient-to-t from-cyan-300 to-blue-600">
-		{/* <div className="flex flex-col items-center bg-gradient-to-t from-orange-300 to-blue-900 to-90%"> */}
+		<div className="flex flex-col items-center bg-gradient-to-t from-cyan-300 to-blue-600 to-90%">
 			<div id="search-container" className="sm:relative md:absolute top-0 right-0 mt-5 md:m-5 flex">
 				<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 				<Input 
@@ -71,11 +70,12 @@ function App() {
 					<>
 						<h2 className="text-2xl">{location}</h2>
 						<h1 className="text-5xl">{Math.round(weatherData.main.temp)}&deg;</h1>
-						<div id="weather-condition" className="w-full flex items-center justify-center text-sm ">
+						<div id="weather-condition" className="w-full flex items-center justify-center">
 							<p className="mr-2">{weatherData.weather[0].main}</p>
 							<Cloud strokeWidth={1} />
 						</div>
-						<div className="w-3/4 flex justify-evenly text-sm">
+						<p>Feels Like: {Math.round(weatherData.main.feels_like)}&deg;</p>
+						<div className="w-3/4 flex justify-evenly">
 							<p>H: {Math.round(weatherData.main.temp_max)}&deg;</p>
 							<p>L: {Math.round(weatherData.main.temp_min)}&deg;</p>
 						</div>
