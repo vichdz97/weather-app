@@ -94,7 +94,7 @@ function App() {
 				<Input 
 					type="text" 
 					placeholder="Search"
-					className="pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white bg-blue-800" 
+					className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white bg-blue-${new Date().getHours() >= 18 || new Date().getHours() < 6 ? "600" : "700"}/30`}
 					value={newLocation}
 					onChange={(e) => setNewLocation(e.target.value)}
 				/>
