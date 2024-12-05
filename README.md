@@ -1,7 +1,7 @@
 # Weather App
 
 > [!NOTE]
-> Last Updated December 4, 2024
+> Last Updated December 5, 2024
 
 ## Live Demo
 [link]()
@@ -13,6 +13,7 @@
 - [Tailwind CSS](https://tailwindcss.com/) (*v3.4.15*)
 - [Shadcn UI](https://ui.shadcn.com/) (*v2.1.6*)
 - [Lucide Icons](https://lucide.dev/) (*v0.460.0*)
+- [OpenWeather API](https://openweathermap.org)
 
 ## Screenshots
 > Desktop View
