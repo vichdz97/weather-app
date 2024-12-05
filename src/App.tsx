@@ -1,4 +1,4 @@
-import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, Moon, Sun } from "lucide-react";
+import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, Moon, Sun, CircleX } from "lucide-react";
 import { useEffect, useState } from "react";
 import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
@@ -12,6 +12,7 @@ const url = 'http://api.openweathermap.org/data/2.5/forecast';
 function App() {
 	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   	const [location, setLocation] = useState('Dallas');
+	const [newLocation, setNewLocation] = useState('');
   	const [units, setUnits] = useState('imperial');
 	const [error, setError] = useState('');
 
@@ -33,8 +34,6 @@ function App() {
 
 		fetchWeather();
 	}, [location, units]);
-
-	const [newLocation, setNewLocation] = useState('');
 
 	const formatLocation = (location: string): string => {
 		return location
@@ -97,6 +96,13 @@ function App() {
 					className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white bg-blue-${new Date().getHours() >= 18 || new Date().getHours() < 6 ? "600" : "700"}/30`}
 					value={newLocation}
 					onChange={(e) => setNewLocation(e.target.value)}
+				/>
+				<CircleX 
+					size={18} 
+					strokeWidth={1} 
+					className="absolute translate-x-1/2 translate-y-1/2 right-16 fill-slate-400 stroke-slate-600 active:fill-slate-300"
+					visibility={newLocation == '' ? 'hidden' : 'visible'}
+					onClick={() => setNewLocation('')}
 				/>
 				<Button onClick={handleSearch} className="bg-blue-400 rounded-lg">
 					<Search />
