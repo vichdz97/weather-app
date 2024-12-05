@@ -107,7 +107,7 @@ function App() {
 					<CircleX 
 						size={18} 
 						strokeWidth={1} 
-						className="absolute translate-x-1/2 translate-y-1/2 right-16 fill-slate-400 stroke-slate-600 active:fill-slate-300"
+						className="absolute translate-x-1/2 translate-y-1/2 right-16 fill-slate-300 stroke-slate-500 active:fill-slate-300"
 						visibility={newLocation == '' ? 'hidden' : 'visible'}
 						onClick={() => setNewLocation('')}
 					/>
