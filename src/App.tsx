@@ -52,6 +52,27 @@ function App() {
         setNewLocation('');
 	};
 
+	const setBackgroundGradient = () => {
+		const hour = new Date().getHours();
+		const condition = weatherData?.weather[0].main;
+
+		// dawn 6AM to 8AM
+		if (hour >= 6 && hour < 8)
+			return "from-orange-300 to-blue-600 to-90%";
+		
+		// day 8AM to 6PM
+		if (hour >= 8 && hour < 18)
+			return condition == "Rain" ? "from-slate-600 to-slate-400" : "from-cyan-300 to-blue-600 to-90%";
+		
+		// dusk 6PM to 8PM
+		if (hour >= 18 && hour < 20)
+			return "from-orange-300 to-blue-900 to-90%";
+		
+		// night 8PM to 6AM
+		if (hour >= 20 || hour < 6)
+			return "from-blue-950/90 to-indigo-950 to-70%";
+	}
+
 	const toggleUnits = () => {
 		units == 'imperial' ? setUnits('metric') : setUnits('imperial');
 	}
@@ -68,7 +89,7 @@ function App() {
 	}
 
 	return (
-		<div className="flex flex-col items-center overflow-auto bg-gradient-to-t from-slate-600 to-slate-400">
+		<div className={`flex flex-col items-center overflow-auto bg-gradient-to-t ${setBackgroundGradient()}`}>
 			<div id="search-container" className="flex relative mt-5 md:absolute md:top-0 md:right-0 md:m-5">
 				<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 				<Input 
