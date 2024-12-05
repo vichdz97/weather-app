@@ -7,7 +7,6 @@ import { Button } from "./components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
 import { Switch } from "./components/ui/switch";
 
-const apiKey = 'e1dc67815f36dcc0e87dec2028704d37';
 const url = 'http://api.openweathermap.org/data/2.5/forecast';
 
 function App() {
@@ -21,7 +20,7 @@ function App() {
 		async function fetchWeather() {
 			try {
 				setError('');
-				const response = await axios.get(`${url}?q=${location}&units=${units}&appid=${apiKey}`);
+				const response = await axios.get(`${url}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const data = response.data.list[0];
 				setWeatherData(data);
 				console.log(data);
