@@ -72,6 +72,13 @@ function App() {
 			return "from-blue-950/90 to-indigo-950 to-70%";
 	}
 
+	const setSearchInputBg = () => {
+		const hour = new Date().getHours();
+		if (hour >= 18 || hour < 6) // dusk to dawn - 6PM to 6 AM
+			return "bg-blue-600/30";
+		return "bg-blue-800/30";
+	}
+
 	const getWeatherIcon = (condition: string) => {
 		switch (condition) {
 			case "Clear": 
@@ -93,7 +100,7 @@ function App() {
 					<Input 
 						type="text" 
 						placeholder="Search"
-						className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white bg-blue-${new Date().getHours() >= 18 || new Date().getHours() < 6 ? "600" : "700"}/30`}
+						className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white ${setSearchInputBg()}`}
 						value={newLocation}
 						onChange={(e) => setNewLocation(e.target.value)}
 					/>
