@@ -17,7 +17,7 @@ function AppSidebar({ units, setUnits } : Props) {
 				<SidebarGroup>
 					<SidebarGroupLabel>Units</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<div className="relative flex items-center h-9 w-full p-1 rounded bg-blue-500 text-slate-300">
+						<div className="relative flex items-center h-9 w-full p-1 rounded bg-blue-500/40 text-slate-300">
 							<div className={`h-7 w-1/2 cursor-pointer rounded-md bg-blue-600 transition duration-300 ${moveSwitch()}`}></div>
 							<span className="absolute left-0 w-1/2 h-full flex items-center justify-center cursor-pointer" onClick={() => setUnits('metric')}>
 								Metric: &deg;C
