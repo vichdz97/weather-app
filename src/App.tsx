@@ -61,7 +61,7 @@ function App() {
 		
 		// day 8AM to 6PM
 		if (hour >= 8 && hour < 18)
-			return condition == "Rain" ? "from-slate-600 to-slate-400" : "from-cyan-300 to-blue-600 to-90%";
+			return (condition == "Rain" || condition == "Clouds") ? "from-slate-600 to-slate-400" : "from-cyan-300 to-blue-600 to-90%";
 		
 		// dusk 6PM to 8PM
 		if (hour >= 18 && hour < 20)
