@@ -1,4 +1,4 @@
-import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, Moon, Sun, CircleX } from "lucide-react";
+import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX } from "lucide-react";
 import { useEffect, useState } from "react";
 import WeatherData from "./interfaces/WeatherData";
 import axios from "axios";
@@ -82,7 +82,7 @@ function App() {
 	const getWeatherIcon = (condition: string) => {
 		switch (condition) {
 			case "Clear": 
-				if (weatherData?.sys.pod == 'n') return <Moon strokeWidth={1.5} />;
+				if (weatherData?.sys.pod == 'n') return <MoonStar strokeWidth={1.5} />;
 				return <Sun strokeWidth={1.5} />
 			case "Clouds": return <Cloud strokeWidth={1.5} />;
 			case "Rain": return <CloudRainWind strokeWidth={1.5} />;
