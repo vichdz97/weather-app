@@ -1,6 +1,6 @@
-import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX } from "lucide-react";
+import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
 import { useEffect, useState } from "react";
-import WeatherData from "./interfaces/WeatherData";
+import CurrentWeatherData from "./interfaces/CurrentWeatherData";
 import axios from "axios";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
@@ -8,10 +8,16 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./componen
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import AppSidebar from "./AppSidebar";
 
-const url = 'http://api.openweathermap.org/data/2.5/forecast';
+const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
+
+const hour = new Date().getHours();
+const isDawn = hour >= 6 && hour < 8;
+const isDay = hour >= 8 && hour < 18;
+const isDusk = hour >= 18 && hour < 20;
+const isNight = hour >= 20 || hour < 6;
 
 function App() {
-	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+	const [currentWeatherData, setCurrentWeatherData] = useState<CurrentWeatherData | null>(null);
   	const [location, setLocation] = useState('Dallas');
 	const [newLocation, setNewLocation] = useState('');
   	const [units, setUnits] = useState('imperial');
@@ -22,12 +28,12 @@ function App() {
 		async function fetchWeather() {
 			try {
 				setError('');
-				const response = await axios.get(`${url}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
-				const data = response.data.list[0];
-				setWeatherData(data);
+				const response = await axios.get(`${currentWeatherURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
+				const data = response.data;
 				console.log(data);
+				setCurrentWeatherData(data);
 			} catch (err: any) {
-				setWeatherData(null);
+				setCurrentWeatherData(null);
 				setError(err.respon?.data?.message || err.message);
 				console.error('There was an error fetching weather data!', err);
 			}
@@ -52,40 +58,44 @@ function App() {
 	};
 
 	const setBackgroundGradient = () => {
-		const hour = new Date().getHours();
-		const condition = weatherData?.weather[0].main;
+		const condition = currentWeatherData?.weather[0].main;
 
 		// dawn 6AM to 8AM
-		if (hour >= 6 && hour < 8)
+		if (isDawn)
 			return "from-orange-300 to-blue-600 to-90%";
 		
 		// day 8AM to 6PM
-		if (hour >= 8 && hour < 18)
+		if (isDay)
 			return (condition == "Rain" || condition == "Clouds") ? "from-slate-600 to-slate-400" : "from-cyan-300 to-blue-600 to-90%";
 		
 		// dusk 6PM to 8PM
-		if (hour >= 18 && hour < 20)
+		if (isDusk)
 			return "from-orange-300 to-blue-900 to-90%";
 		
 		// night 8PM to 6AM
-		if (hour >= 20 || hour < 6)
+		if (isNight)
 			return "from-blue-950/90 to-indigo-950 to-70%";
 	}
 
 	const setSearchInputBg = () => {
-		const hour = new Date().getHours();
-		if (hour >= 18 || hour < 6) // dusk to dawn - 6PM to 6 AM
-			return "bg-blue-600/30";
-		return "bg-blue-800/30";
+		// dusk to dawn - 6PM to 6 AM
+		return (isDusk || isNight) ? "bg-blue-600/30" : "bg-blue-800/30";
 	}
 
 	const getWeatherIcon = (condition: string) => {
 		switch (condition) {
-			case "Clear": 
-				if (weatherData?.sys.pod == 'n') return <MoonStar strokeWidth={1.5} />;
-				return <Sun strokeWidth={1.5} />
-			case "Clouds": return <Cloud strokeWidth={1.5} />;
-			case "Rain": return <CloudRainWind strokeWidth={1.5} />;
+			case "Clear":
+				if (isDawn) return <Sunrise strokeWidth={1.5} />;
+				else if (isDay) return <Sun strokeWidth={1.5} />;
+				else if (isDusk) return <Sunset strokeWidth={1.5} />;
+				else return <MoonStar strokeWidth={1.5} />;
+			case "Clouds": return isNight ? <CloudMoon strokeWidth={1.5} /> : <Cloudy strokeWidth={1.5} />;
+			case "Drizzle": return <CloudDrizzle strokeWidth={1.5} />;
+			case "Fog":
+			case "Haze":
+			case "Mist": return <CloudFog strokeWidth={1.5} />;
+			case "Rain": return isNight ? <CloudMoonRain strokeWidth={1.5} /> : <CloudRainWind strokeWidth={1.5} />;
+			case "Snow": return <Snowflake strokeWidth={1.5} />;
 			default: return;
 		}
 	}
@@ -117,17 +127,17 @@ function App() {
 				</div>
 
 				<div className="w-[200px] p-5 m-5 flex flex-col items-center text-white">
-					{ weatherData ? (
+					{ currentWeatherData ? (
 						<>
 							<h2 className="text-2xl">{location}</h2>
-							<h1 className="text-5xl">{Math.round(weatherData.main.temp)}&deg;</h1>
+							<h1 className="text-5xl">{Math.round(currentWeatherData.main.temp)}&deg;</h1>
 							<div id="weather-condition" className="w-full flex items-center justify-center">
-								<p className="mr-2">{weatherData.weather[0].main}</p>
-								{ getWeatherIcon(weatherData.weather[0].main) }
+								<p className="mr-2">{currentWeatherData.weather[0].main}</p>
+								{ getWeatherIcon(currentWeatherData.weather[0].main) }
 							</div>
 							<div className="w-3/4 flex justify-evenly">
-								<p>H: {Math.round(weatherData.main.temp_max)}&deg;</p>
-								<p>L: {Math.round(weatherData.main.temp_min)}&deg;</p>
+								<p>H: {Math.round(currentWeatherData.main.temp_max)}&deg;</p>
+								<p>L: {Math.round(currentWeatherData.main.temp_min)}&deg;</p>
 							</div>
 						</>
 					) : error ? (
@@ -138,7 +148,7 @@ function App() {
 				</div>
 
 				<div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 text-white text-sm">
-					{ weatherData && (
+					{ currentWeatherData && (
 						<>
 							<Card className="relative">
 								<CardHeader className="p-3 pt-4">
@@ -148,9 +158,9 @@ function App() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="text-3xl mb-20 sm:mb-4 px-4">
-									{Math.round(weatherData.main.feels_like)}&deg;
+									{Math.round(currentWeatherData.main.feels_like)}&deg;
 								</CardContent>
-								{ Math.round(weatherData.main.feels_like) < Math.round(weatherData.main.temp) && (
+								{ Math.round(currentWeatherData.main.feels_like) < Math.round(currentWeatherData.main.temp) && (
 									<CardFooter className="absolute bottom-0 p-4">Wind is making it feel colder.</CardFooter>
 								)}
 							</Card>
@@ -165,7 +175,7 @@ function App() {
 									<div className="flex justify-between">
 										<p>Wind</p>
 										<p>
-											{Math.round(weatherData.wind.speed)}
+											{Math.round(currentWeatherData.wind.speed)}
 											<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
 										</p>
 									</div>
@@ -173,14 +183,14 @@ function App() {
 									<div className="flex justify-between">
 										<p>Gusts</p>
 										<p>
-											{Math.round(weatherData.wind.gust)}
+											{Math.round(currentWeatherData.wind.gust) || 0}
 											<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
 										</p>
 									</div>
 									<hr className="my-3" />
 									<div className="flex justify-between">
 										<p>Direction</p>
-										<p>{Math.round(weatherData.wind.deg)}&deg;</p>
+										<p>{Math.round(currentWeatherData.wind.deg)}&deg;</p>
 									</div>
 								</CardContent>
 							</Card>
@@ -192,7 +202,7 @@ function App() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="text-3xl px-4">
-									{Math.round(weatherData.main.humidity)}&#37;
+									{Math.round(currentWeatherData.main.humidity)}&#37;
 								</CardContent>
 							</Card>
 							<Card>
@@ -205,12 +215,12 @@ function App() {
 								<CardContent className="px-4 pb-4">
 									<div className="flex justify-between items-center">
 										<p>Ground Level</p>
-										<p>{Math.round(weatherData.main.grnd_level)}<span className="ml-1">hPa</span></p>
+										<p>{Math.round(currentWeatherData.main.grnd_level)}<span className="ml-1">hPa</span></p>
 									</div>
 									<hr className="my-3" />
 									<div className="flex justify-between items-center">
 										<p>Sea Level</p>
-										<p>{Math.round(weatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
+										<p>{Math.round(currentWeatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
 									</div>
 								</CardContent>
 							</Card>
