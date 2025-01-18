@@ -1,6 +1,7 @@
 import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
 import { useEffect, useState } from "react";
-import CurrentWeatherData from "./interfaces/CurrentWeatherData";
+import CurrentWeatherData from "./interfaces/WeatherData";
+import ForecastWeatherData from "./interfaces/WeatherData";
 import axios from "axios";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
@@ -9,6 +10,7 @@ import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import AppSidebar from "./AppSidebar";
 
 const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
+const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
 
 const hour = new Date().getHours();
 const isDawn = hour >= 6 && hour < 8;
@@ -18,6 +20,7 @@ const isNight = hour >= 20 || hour < 6;
 
 function App() {
 	const [currentWeatherData, setCurrentWeatherData] = useState<CurrentWeatherData | null>(null);
+	const [forecastWeatherData, setForecastWeatherData] = useState<ForecastWeatherData | null>(null);
   	const [location, setLocation] = useState('Dallas');
 	const [newLocation, setNewLocation] = useState('');
   	const [units, setUnits] = useState('imperial');
@@ -28,10 +31,17 @@ function App() {
 		async function fetchWeather() {
 			try {
 				setError('');
-				const response = await axios.get(`${currentWeatherURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
-				const data = response.data;
-				console.log(data);
-				setCurrentWeatherData(data);
+				const currentResponse = await axios.get(`${currentWeatherURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
+				const currentData = currentResponse.data;
+				console.log("currentData", currentData);
+
+				setCurrentWeatherData(currentData);
+
+				const forecastResponse = await axios.get(`${forecastURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
+				const forecastData = forecastResponse.data;
+				// console.log(forecastData);
+				// TODO: get the 5 day forcast
+
 			} catch (err: any) {
 				setCurrentWeatherData(null);
 				setError(err.respon?.data?.message || err.message);

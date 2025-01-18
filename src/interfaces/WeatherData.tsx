@@ -18,6 +18,11 @@ export default interface CurrentWeatherData {
     }];
     wind: {
         deg: number;
+        gust: number;
         speed: number;
     };
+}
+
+export default interface ForecastWeatherData {
+
 }
