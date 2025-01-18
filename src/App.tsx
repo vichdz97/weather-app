@@ -24,6 +24,7 @@ function App() {
   	const [location, setLocation] = useState('Dallas');
 	const [newLocation, setNewLocation] = useState('');
   	const [units, setUnits] = useState('imperial');
+  	const [timeFormat, setTimeFormat] = useState(12);
 	const [error, setError] = useState('');
 
 	// Fetch weather data for the default location (Dallas)
@@ -117,12 +118,15 @@ function App() {
 	}
 
 	const getTime = (time: number) => {
-		return new Date(time * 1000).toLocaleTimeString().replace(/:\d*\s/g, " ")
+		return timeFormat == 12 ? 
+			new Date(time * 1000).toLocaleTimeString().replace(/:\d*\s/g, " ") 
+			:
+			new Date(time * 1000).toTimeString().replace(/:\d*\s.*/g, "");
 	}
 
 	return (
 		<SidebarProvider defaultOpen={false} className={`overflow-auto bg-gradient-to-t ${setBackgroundGradient()}`}>
-			<AppSidebar units={units} setUnits={setUnits}/>
+			<AppSidebar units={units} timeFormat={timeFormat} setUnits={setUnits} setTimeFormat={setTimeFormat}/>
 			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
 			<div className="w-full flex flex-col items-center -ml-10">
 				<div id="search-container" className="flex relative mt-5 md:absolute md:top-0 md:right-0 md:m-5">
