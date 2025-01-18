@@ -64,7 +64,7 @@ function App() {
 		// Format location
 		const formattedLocation = formatLocation(newLocation);
         setLocation(formattedLocation);
-        setNewLocation('');
+        setNewLocation(formattedLocation);
 	};
 
 	const setBackgroundGradient = () => {
