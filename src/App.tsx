@@ -110,6 +110,12 @@ function App() {
 		}
 	}
 
+	const setWindDirection = (direction: number): string => {
+		const directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW", "N"]
+		const index = Math.round((direction % 360) / 22.5);
+		return `${direction}° ${directions[index]}`;
+	}
+
 	return (
 		<SidebarProvider defaultOpen={false} className={`overflow-auto bg-gradient-to-t ${setBackgroundGradient()}`}>
 			<AppSidebar units={units} setUnits={setUnits}/>
@@ -200,7 +206,7 @@ function App() {
 									<hr className="my-3" />
 									<div className="flex justify-between">
 										<p>Direction</p>
-										<p>{Math.round(currentWeatherData.wind.deg)}&deg;</p>
+										<p>{setWindDirection(currentWeatherData.wind.deg)}</p>
 									</div>
 								</CardContent>
 							</Card>
