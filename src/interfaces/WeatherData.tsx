@@ -1,5 +1,4 @@
 export default interface CurrentWeatherData {
-    name: string;
     main: {
         feels_like: number;
         humidity: number;
@@ -9,9 +8,10 @@ export default interface CurrentWeatherData {
         temp_max: number;
         temp_min: number;
     };
+    name: string;
     sys: {
-        sunrise: string;
-        sunset: string
+        sunrise: number;
+        sunset: number;
     };
     weather: [{
         main: string; // weather condition
