@@ -103,7 +103,7 @@ function App() {
 	return (
 		<SidebarProvider defaultOpen={false} className={`overflow-auto bg-gradient-to-t ${setBackgroundGradient()}`}>
 			<AppSidebar units={units} setUnits={setUnits}/>
-			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-400 hover:text-slate-400 active:text-slate-100 hover:bg-slate-100/10" />
+			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
 			<div className="w-full flex flex-col items-center -ml-10">
 				<div id="search-container" className="flex relative mt-5 md:absolute md:top-0 md:right-0 md:m-5">
 					<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
@@ -208,7 +208,7 @@ function App() {
 							<Card>
 								<CardHeader className="p-4 pb-3">
 									<CardTitle>
-										<Gauge strokeWidth={1.5} className="mr-2"/>
+										<Gauge strokeWidth={1.5} className="mr-2" />
 										<span>PRESSURE</span>
 									</CardTitle>
 								</CardHeader>
