@@ -1,4 +1,4 @@
-import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
+import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, SunriseIcon, SunsetIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import CurrentWeatherData from "./interfaces/WeatherData";
 import ForecastWeatherData from "./interfaces/WeatherData";
@@ -114,6 +114,10 @@ function App() {
 		const directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW", "N"]
 		const index = Math.round((direction % 360) / 22.5);
 		return `${direction}° ${directions[index]}`;
+	}
+
+	const getTime = (time: number) => {
+		return new Date(time * 1000).toLocaleTimeString().replace(/:\d*\s/g, " ")
 	}
 
 	return (
@@ -239,6 +243,39 @@ function App() {
 										<p>{Math.round(currentWeatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
 									</div>
 								</CardContent>
+							</Card>
+							<Card>
+								<CardHeader className="p-4 pb-3">
+									<CardTitle>
+										{ isDay ? (
+											<>
+												<SunsetIcon strokeWidth={1.5} className="mr-2" />
+												<span>SUNSET</span>
+											</>
+										) : (
+											<>
+												<SunriseIcon strokeWidth={1.5} className="mr-2" />
+												<span>SUNRISE</span>
+											</>
+										)}
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="text-3xl px-4">
+									{ isDay ? getTime(currentWeatherData.sys.sunset) : getTime(currentWeatherData.sys.sunrise)}
+								</CardContent>
+								<CardFooter className="px-4">
+									{ isDay ? (
+										<>
+											<span className="mr-1">Sunrise:</span>
+											{getTime(currentWeatherData.sys.sunrise)}
+										</>
+									) : (
+										<>
+											<span className="mr-1">Sunset:</span>
+											{getTime(currentWeatherData.sys.sunset)}
+										</>
+									) }
+								</CardFooter>
 							</Card>
 						</>
 					)}
