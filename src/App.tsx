@@ -251,7 +251,7 @@ function App() {
 							<Card>
 								<CardHeader className="p-4 pb-3">
 									<CardTitle>
-										{ isDay ? (
+										{ isDawn || isDay ? (
 											<>
 												<SunsetIcon strokeWidth={1.5} className="mr-2" />
 												<span>SUNSET</span>
@@ -265,10 +265,10 @@ function App() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="text-3xl px-4">
-									{ isDay ? getTime(currentWeatherData.sys.sunset) : getTime(currentWeatherData.sys.sunrise)}
+									{ isDawn || isDay ? getTime(currentWeatherData.sys.sunset) : getTime(currentWeatherData.sys.sunrise)}
 								</CardContent>
 								<CardFooter className="px-4">
-									{ isDay ? (
+									{ isDawn || isDay ? (
 										<>
 											<span className="mr-1">Sunrise:</span>
 											{getTime(currentWeatherData.sys.sunrise)}
