@@ -1,4 +1,4 @@
-import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, Clock } from "lucide-react";
+import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import CurrentWeatherData from "./interfaces/WeatherData";
 import ForecastWeatherData from "./interfaces/WeatherData";
@@ -101,9 +101,9 @@ function App() {
 
 		switch (condition) {
 			case "Clear":
-				if (dawn || day) return <Sun strokeWidth={1.5} />;
-				else return <MoonStar strokeWidth={1.5} />;
-			case "Clouds": return night ? <CloudMoon strokeWidth={1.5} /> : <Cloudy strokeWidth={1.5} />;
+				if (dawn || day) return <Sun fill="gold" stroke="gold" strokeWidth={1.5} />;
+				else return <MoonStar fill="white" strokeWidth={1.5} />;
+			case "Clouds": return night ? <CloudMoon fill="white" strokeWidth={1.5} /> : <Cloud fill="white" strokeWidth={1.5} />;
 			case "Drizzle": return <CloudDrizzle strokeWidth={1.5} />;
 			case "Fog":
 			case "Haze":
@@ -201,14 +201,14 @@ function App() {
 												{ currentWeatherData.sys.sunrise > data.dt && currentWeatherData.sys.sunrise < forecastWeatherData?.list[index + 1].dt &&
 													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
 														<span>{getTime(currentWeatherData.sys.sunrise).replace(" ", "")}</span>
-														<Sunrise strokeWidth={1.5} />
+														<Sunrise fill="gold" strokeWidth={1.5} />
 														<span>Sunrise</span>
 													</div>
 												}
 												{ currentWeatherData.sys.sunset > data.dt && currentWeatherData.sys.sunset < forecastWeatherData?.list[index + 1].dt &&
 													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
 														<span>{getTime(currentWeatherData.sys.sunset).replace(" ", "")}</span>
-														<Sunset strokeWidth={1.5} />
+														<Sunset fill="gold" strokeWidth={1.5} />
 														<span>Sunset</span>
 													</div>
 												}
