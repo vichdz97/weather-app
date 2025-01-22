@@ -237,12 +237,12 @@ function App() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="px-4 pb-4">
-									<div className="flex justify-between items-center">
+									<div className="flex justify-between gap-1 items-center">
 										<p>Ground Level</p>
 										<p>{Math.round(currentWeatherData.main.grnd_level)}<span className="ml-1">hPa</span></p>
 									</div>
 									<hr className="my-3" />
-									<div className="flex justify-between items-center">
+									<div className="flex justify-between gap-1 items-center">
 										<p>Sea Level</p>
 										<p>{Math.round(currentWeatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
 									</div>
