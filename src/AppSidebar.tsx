@@ -26,14 +26,13 @@ function AppSidebar({ units, timeFormat, newLocation, setUnits, setTimeFormat, s
     return(
       	<Sidebar>
         	<SidebarContent>
-				<SidebarGroup className="md:hidden">
-					<SidebarGroupLabel>Search</SidebarGroupLabel>
+				<SidebarGroup className="mt-5 md:hidden">
 					<SidebarGroupContent className="flex">
 						<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 						<Input 
 							type="text" 
 							placeholder="Search"
-							className={`text-white px-8 rounded-l-xl rounded-r-none border-none bg-blue-900 focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500`}
+							className={`text-white px-8 rounded-l-xl rounded-r-none border-none bg-blue-500/40 focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500`}
 							value={newLocation}
 							onChange={(e) => setNewLocation(e.target.value)}
 						/>
@@ -52,8 +51,8 @@ function AppSidebar({ units, timeFormat, newLocation, setUnits, setTimeFormat, s
 				<SidebarGroup>
 					<SidebarGroupLabel>Units</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<div className="relative flex items-center h-9 w-full p-1 rounded bg-blue-500/40 text-slate-100">
-							<div className={`h-7 w-1/2 cursor-pointer rounded-md bg-blue-600 transition duration-300 ${moveSwitchFor("units")}`}></div>
+						<div className="relative h-9 w-full flex items-center p-1 rounded-xl bg-blue-500/40 text-slate-100">
+							<div className={`h-7 w-1/2 cursor-pointer rounded-xl bg-blue-600 transition duration-300 ${moveSwitchFor("units")}`}></div>
 							<span className="absolute left-0 w-1/2 h-full flex items-center justify-center cursor-pointer" onClick={() => setUnits('metric')}>
 								Metric: &deg;C
 							</span>
@@ -66,8 +65,8 @@ function AppSidebar({ units, timeFormat, newLocation, setUnits, setTimeFormat, s
 				<SidebarGroup>
 					<SidebarGroupLabel>Time</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<div className="relative flex items-center h-9 w-full p-1 rounded bg-blue-500/40 text-slate-100">
-							<div className={`h-7 w-1/2 cursor-pointer rounded-md bg-blue-600 transition duration-300 ${moveSwitchFor("time")}`}></div>
+						<div className="relative h-9 w-full flex items-center p-1 rounded-xl bg-blue-500/40 text-slate-100">
+							<div className={`h-7 w-1/2 cursor-pointer rounded-xl bg-blue-600 transition duration-300 ${moveSwitchFor("time")}`}></div>
 							<span className="absolute left-0 w-1/2 h-full flex items-center justify-center cursor-pointer" onClick={() => setTimeFormat(24)}>
 								24-hour
 							</span>
