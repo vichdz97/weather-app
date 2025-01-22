@@ -196,7 +196,7 @@ function App() {
 									</div>
 									{ forecastWeatherData?.list.map((data: any, index: number) => {
 										return index <= 8 && (
-											<>
+											<div key={index}>
 												<div className="flex-1 min-w-10 flex flex-col items-center gap-4 font-semibold">
 													<span>{getTime(data.dt).replace(":00 ", "")}</span>
 													{getWeatherIcon(data.weather[0].main, parseInt(new Date(data.dt * 1000).toTimeString().replace(/:.*/g, "")))}
@@ -216,7 +216,7 @@ function App() {
 														<span>Sunset</span>
 													</div>
 												}
-											</>
+											</div>
 										)
 									})}
 								</CardContent>
