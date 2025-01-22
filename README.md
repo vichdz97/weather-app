@@ -1,7 +1,10 @@
 # Weather App
 
 > [!NOTE]
-> Last Updated December 5, 2024
+> Last Updated January 22, 2025
+
+## Summary
+Inspired by Apple's layout and design, this responsive weather application displays current and forecast data using the OpenWeather API.
 
 ## Live Demo
 [link]()
@@ -16,11 +19,9 @@
 - [OpenWeather API](https://openweathermap.org)
 
 ## Screenshots
-> Desktop View
+### Desktop View
+<img src="" alt="Desktop view of Weather App" />
 
-Pending...
-
-> Mobile View
-
-Pending...
+### Mobile View
+<img src="" alt="Mobile view of Weather App" />
 
