@@ -1,4 +1,4 @@
-import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, SunriseIcon, SunsetIcon } from "lucide-react";
+import { Cloudy, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import CurrentWeatherData from "./interfaces/WeatherData";
 import ForecastWeatherData from "./interfaces/WeatherData";
@@ -13,11 +13,11 @@ import AppSidebar from "./AppSidebar";
 const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
 const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
 
-const hour = new Date().getHours();
-const isDawn = hour >= 6 && hour < 8;
-const isDay = hour >= 8 && hour < 18;
-const isDusk = hour >= 18 && hour < 20;
-const isNight = hour >= 20 || hour < 6;
+const currentHour = new Date().getHours();
+const isDawn = currentHour >= 6 && currentHour < 8;
+const isDay = currentHour >= 8 && currentHour < 18;
+const isDusk = currentHour >= 18 && currentHour < 20;
+const isNight = currentHour >= 20 || currentHour < 6;
 
 function App() {
 	const [currentWeatherData, setCurrentWeatherData] = useState<CurrentWeatherData | null>(null);
@@ -35,17 +35,16 @@ function App() {
 				setError('');
 				const currentResponse = await axios.get(`${currentWeatherURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const currentData = currentResponse.data;
-				console.log("currentData", currentData);
-
+				// console.log("currentData", currentData);
 				setCurrentWeatherData(currentData);
 
 				const forecastResponse = await axios.get(`${forecastURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const forecastData = forecastResponse.data;
-				// console.log(forecastData);
-				// TODO: get the 5 day forcast
-
+				console.log("forecastData", forecastData);
+				setForecastWeatherData(forecastData);
 			} catch (err: any) {
 				setCurrentWeatherData(null);
+				setForecastWeatherData(null);
 				setError(err.respon?.data?.message || err.message);
 				console.error('There was an error fetching weather data!', err);
 			}
@@ -94,19 +93,22 @@ function App() {
 		return (isDusk || isNight) ? "bg-blue-600/30" : "bg-blue-800/30";
 	}
 
-	const getWeatherIcon = (condition: string) => {
+	const getWeatherIcon = (condition: string, timeOfDay: number) => {
+		const dawn = timeOfDay >= 6 && timeOfDay < 8;
+		const day = timeOfDay >= 8 && timeOfDay < 18;
+		const dusk = timeOfDay >= 18 && timeOfDay < 20;
+		const night = timeOfDay >= 20 || timeOfDay < 6;
+
 		switch (condition) {
 			case "Clear":
-				if (isDawn) return <Sunrise strokeWidth={1.5} />;
-				else if (isDay) return <Sun strokeWidth={1.5} />;
-				else if (isDusk) return <Sunset strokeWidth={1.5} />;
+				if (dawn || day) return <Sun strokeWidth={1.5} />;
 				else return <MoonStar strokeWidth={1.5} />;
-			case "Clouds": return isNight ? <CloudMoon strokeWidth={1.5} /> : <Cloudy strokeWidth={1.5} />;
+			case "Clouds": return night ? <CloudMoon strokeWidth={1.5} /> : <Cloudy strokeWidth={1.5} />;
 			case "Drizzle": return <CloudDrizzle strokeWidth={1.5} />;
 			case "Fog":
 			case "Haze":
 			case "Mist": return <CloudFog strokeWidth={1.5} />;
-			case "Rain": return isNight ? <CloudMoonRain strokeWidth={1.5} /> : <CloudRainWind strokeWidth={1.5} />;
+			case "Rain": return night ? <CloudMoonRain strokeWidth={1.5} /> : <CloudRainWind strokeWidth={1.5} />;
 			case "Snow": return <Snowflake strokeWidth={1.5} />;
 			default: return;
 		}
@@ -158,7 +160,7 @@ function App() {
 							<h1 className="text-5xl">{Math.round(currentWeatherData.main.temp)}&deg;</h1>
 							<div id="weather-condition" className="w-full flex items-center justify-center">
 								<p className="mr-2">{currentWeatherData.weather[0].main}</p>
-								{ getWeatherIcon(currentWeatherData.weather[0].main) }
+								{ getWeatherIcon(currentWeatherData.weather[0].main, currentHour) }
 							</div>
 							<div className="w-3/4 flex justify-evenly">
 								<p>H: {Math.round(currentWeatherData.main.temp_max)}&deg;</p>
@@ -173,9 +175,49 @@ function App() {
 				</div>
 
 				<div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-white text-sm">
-					{ currentWeatherData && (
+					{ currentWeatherData && forecastWeatherData && (
 						<>
-							<Card className="relative">
+							<Card className="col-span-2 md:col-start-2">
+								<CardHeader>
+									<CardTitle className="flex gap-2">
+										<Clock strokeWidth={1.5} />
+										<span>24-HR FORECAST</span>
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="flex gap-4 overflow-scroll">
+									<div className="flex-1 min-w-10 flex flex-col items-center gap-4 font-semibold">
+										<span>Now</span>
+										{getWeatherIcon(currentWeatherData.weather[0].main, currentHour)}
+										<span>{Math.round(currentWeatherData.main.temp)}&deg;</span>
+									</div>
+									{ forecastWeatherData?.list.map((data: any, index: number) => {
+										return index <= 8 && (
+											<>
+												<div className="flex-1 min-w-10 flex flex-col items-center gap-4 font-semibold">
+													<span>{getTime(data.dt).replace(":00 ", "")}</span>
+													{getWeatherIcon(data.weather[0].main, parseInt(new Date(data.dt * 1000).toTimeString().replace(/:.*/g, "")))}
+													<span>{Math.round(data.main.temp)}&deg;</span>
+												</div>
+												{ currentWeatherData.sys.sunrise > data.dt && currentWeatherData.sys.sunrise < forecastWeatherData?.list[index + 1].dt &&
+													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
+														<span>{getTime(currentWeatherData.sys.sunrise).replace(" ", "")}</span>
+														<Sunrise strokeWidth={1.5} />
+														<span>Sunrise</span>
+													</div>
+												}
+												{ currentWeatherData.sys.sunset > data.dt && currentWeatherData.sys.sunset < forecastWeatherData?.list[index + 1].dt &&
+													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
+														<span>{getTime(currentWeatherData.sys.sunset).replace(" ", "")}</span>
+														<Sunset strokeWidth={1.5} />
+														<span>Sunset</span>
+													</div>
+												}
+											</>
+										)
+									})}
+								</CardContent>
+							</Card>
+							<Card className="relative md:row-start-1 md:col-start-1">
 								<CardHeader>
 									<CardTitle className="flex gap-1">
 										<Thermometer strokeWidth={1.5} className="-ml-1"/>
@@ -263,12 +305,12 @@ function App() {
 									<CardTitle className="flex gap-2">
 										{ isDawn || isDay ? (
 											<>
-												<SunsetIcon strokeWidth={1.5} />
+												<Sunset strokeWidth={1.5} />
 												<span>SUNSET</span>
 											</>
 										) : (
 											<>
-												<SunriseIcon strokeWidth={1.5} />
+												<Sunrise strokeWidth={1.5} />
 												<span>SUNRISE</span>
 											</>
 										)}
