@@ -1,4 +1,5 @@
 export default interface CurrentWeatherData {
+    dt: number;
     main: {
         feels_like: number;
         humidity: number;
@@ -24,5 +25,5 @@ export default interface CurrentWeatherData {
 }
 
 export default interface ForecastWeatherData {
-
+    list: Array<CurrentWeatherData>;
 }
