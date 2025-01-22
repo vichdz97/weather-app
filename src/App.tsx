@@ -6,6 +6,7 @@ import axios from "axios";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
+import { Separator } from "./components/ui/separator";
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import AppSidebar from "./AppSidebar";
 
@@ -111,10 +112,10 @@ function App() {
 		}
 	}
 
-	const setWindDirection = (direction: number): string => {
+	const getWindDirection = (direction: number): string => {
 		const directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW", "N"]
 		const index = Math.round((direction % 360) / 22.5);
-		return `${direction}° ${directions[index]}`;
+		return directions[index];
 	}
 
 	const getTime = (time: number) => {
@@ -175,107 +176,116 @@ function App() {
 					{ currentWeatherData && (
 						<>
 							<Card className="relative">
-								<CardHeader className="p-3 pt-4">
-									<CardTitle>
-										<Thermometer strokeWidth={1.5} className="mr-1"/>
+								<CardHeader>
+									<CardTitle className="flex gap-1">
+										<Thermometer strokeWidth={1.5} className="-ml-1"/>
 										<span>FEELS LIKE</span>
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="text-3xl mb-20 sm:mb-4 px-4">
+								<CardContent className="text-3xl">
 									{Math.round(currentWeatherData.main.feels_like)}&deg;
 								</CardContent>
 								{ Math.round(currentWeatherData.main.feels_like) < Math.round(currentWeatherData.main.temp) && (
-									<CardFooter className="absolute bottom-0 p-4">Wind is making it feel colder.</CardFooter>
+									<CardFooter className="absolute bottom-0">Wind is making it feel colder.</CardFooter>
 								)}
 							</Card>
 							<Card>
-								<CardHeader className="p-4 pb-3">
-									<CardTitle>
-										<Wind strokeWidth={1.5} className="mr-2"/>
+								<CardHeader>
+									<CardTitle className="flex gap-2">
+										<Wind strokeWidth={1.5} />
 										<span>WIND</span>
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="px-4 pb-4">
+								<CardContent>
 									<div className="flex justify-between">
 										<p>Wind</p>
-										<p>
+										<p className="flex gap-1">
 											{Math.round(currentWeatherData.wind.speed)}
-											<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
+											<span>{units == 'imperial' ? 'mph' : 'm/s'}</span>
 										</p>
 									</div>
-									<hr className="my-3" />
+									<Separator className="my-3" />
 									<div className="flex justify-between">
 										<p>Gusts</p>
-										<p>
+										<p className="flex gap-1">
 											{Math.round(currentWeatherData.wind.gust) || 0}
-											<span className="ml-1">{units == 'imperial' ? 'mph' : 'm/s'}</span>
+											<span >{units == 'imperial' ? 'mph' : 'm/s'}</span>
 										</p>
 									</div>
-									<hr className="my-3" />
+									<Separator className="my-3" />
 									<div className="flex justify-between">
 										<p>Direction</p>
-										<p>{setWindDirection(currentWeatherData.wind.deg)}</p>
+										<p className="flex gap-1">
+											{currentWeatherData.wind.deg}°
+											<span>{getWindDirection(currentWeatherData.wind.deg)}</span>
+										</p>
 									</div>
 								</CardContent>
 							</Card>
 							<Card>
-								<CardHeader className="p-4 pb-3">
-									<CardTitle>
-										<Waves strokeWidth={1.5} className="mr-2" />
+								<CardHeader>
+									<CardTitle className="flex gap-2">
+										<Waves strokeWidth={1.5} />
 										<span>HUMIDITY</span>
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="text-3xl px-4">
+								<CardContent className="text-3xl">
 									{Math.round(currentWeatherData.main.humidity)}&#37;
 								</CardContent>
 							</Card>
 							<Card>
-								<CardHeader className="p-4 pb-3">
-									<CardTitle>
-										<Gauge strokeWidth={1.5} className="mr-2" />
+								<CardHeader>
+									<CardTitle className="flex gap-2">
+										<Gauge strokeWidth={1.5} />
 										<span>PRESSURE</span>
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="px-4 pb-4">
+								<CardContent>
 									<div className="flex justify-between gap-1 items-center">
 										<p>Ground Level</p>
-										<p>{Math.round(currentWeatherData.main.grnd_level)}<span className="ml-1">hPa</span></p>
+										<p className="flex gap-1">
+											{Math.round(currentWeatherData.main.grnd_level)}
+											<span>hPa</span>
+										</p>
 									</div>
-									<hr className="my-3" />
+									<Separator className="my-3" />
 									<div className="flex justify-between gap-1 items-center">
 										<p>Sea Level</p>
-										<p>{Math.round(currentWeatherData.main.sea_level)}<span className="ml-1">hPa</span></p>
+										<p className="flex gap-1">
+											{Math.round(currentWeatherData.main.sea_level)}
+											<span>hPa</span>
+										</p>
 									</div>
 								</CardContent>
 							</Card>
 							<Card>
-								<CardHeader className="p-4 pb-3">
-									<CardTitle>
+								<CardHeader>
+									<CardTitle className="flex gap-2">
 										{ isDawn || isDay ? (
 											<>
-												<SunsetIcon strokeWidth={1.5} className="mr-2" />
+												<SunsetIcon strokeWidth={1.5} />
 												<span>SUNSET</span>
 											</>
 										) : (
 											<>
-												<SunriseIcon strokeWidth={1.5} className="mr-2" />
+												<SunriseIcon strokeWidth={1.5} />
 												<span>SUNRISE</span>
 											</>
 										)}
 									</CardTitle>
 								</CardHeader>
-								<CardContent className="text-3xl px-4">
+								<CardContent className="text-3xl">
 									{ isDawn || isDay ? getTime(currentWeatherData.sys.sunset) : getTime(currentWeatherData.sys.sunrise)}
 								</CardContent>
-								<CardFooter className="px-4">
+								<CardFooter className="flex gap-1">
 									{ isDawn || isDay ? (
 										<>
-											<span className="mr-1">Sunrise:</span>
+											<span>Sunrise:</span>
 											{getTime(currentWeatherData.sys.sunrise)}
 										</>
 									) : (
 										<>
-											<span className="mr-1">Sunset:</span>
+											<span>Sunset:</span>
 											{getTime(currentWeatherData.sys.sunset)}
 										</>
 									) }
