@@ -1,10 +1,8 @@
-import { Cloud, Search, CloudRainWind, MoonStar, Sun, CircleX, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
+import { Cloud, CloudRainWind, MoonStar, Sun, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AppSidebar from "./AppSidebar";
 
-import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 
 import CurrentWeatherData from "./interfaces/WeatherData";
@@ -18,15 +16,18 @@ import Pressure from "./widgets/Pressure";
 import Sunset from "./widgets/Sunset";
 import Sunrise from "./widgets/Sunrise";
 import CurrentWeather from "./CurrentWeather";
+import SearchBar from "./SearchBar";
 
 const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
 const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
 
 const currentHour = new Date().getHours();
-const isDawn = currentHour >= 6 && currentHour < 8;
-const isDay = currentHour >= 8 && currentHour < 18;
-const isDusk = currentHour >= 18 && currentHour < 20;
-const isNight = currentHour >= 20 || currentHour < 6;
+const timeOfDay = {
+	isDawn: currentHour >= 6 && currentHour < 8,
+	isDay: currentHour >= 8 && currentHour < 18,
+	isDusk: currentHour >= 18 && currentHour < 20,
+	isNight: currentHour >= 20 || currentHour < 6
+};
 
 function App() {
 	const [currentWeatherData, setCurrentWeatherData] = useState<CurrentWeatherData | null>(null);
@@ -79,7 +80,7 @@ function App() {
 
 	const setBackgroundGradient = () => {
 		const condition = currentWeatherData?.weather[0].main;
-
+		const { isDawn, isDay , isDusk, isNight } = timeOfDay;
 		// dawn 6AM to 8AM
 		if (isDawn)
 			return "from-orange-300 to-blue-600 to-90%";
@@ -95,11 +96,6 @@ function App() {
 		// night 8PM to 6AM
 		if (isNight)
 			return "from-blue-950/90 to-indigo-950 to-70%";
-	}
-
-	const setSearchInputBg = () => {
-		// dusk to dawn - 6PM to 6 AM
-		return (isDusk || isNight) ? "bg-blue-600/30" : "bg-blue-800/30";
 	}
 
 	const getWeatherIcon = (condition: string, timeOfDay: number) => {
@@ -139,36 +135,15 @@ function App() {
 			 />
 			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
 			<div className="w-full -ml-10 text-white">
-				<div className="hidden md:flex md:absolute md:top-0 md:right-0 md:m-5">
-					<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
-					<Input 
-						type="text" 
-						placeholder="Search"
-						className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 ${setSearchInputBg()}`}
-						value={newLocation}
-						onChange={(e) => setNewLocation(e.target.value)}
-					/>
-					<CircleX 
-						size={18} 
-						strokeWidth={1} 
-						className="absolute translate-x-1/2 translate-y-1/2 right-16 fill-slate-300 stroke-slate-500 active:fill-slate-300"
-						visibility={newLocation == '' ? 'hidden' : 'visible'}
-						onClick={() => setNewLocation('')}
-					/>
-					<Button onClick={handleSearch} className="bg-blue-400 rounded-lg">
-						<Search />
-					</Button>
-				</div>
-
+				<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
 				<CurrentWeather currentHour={currentHour} data={currentWeatherData} error={error} location={location} getWeatherIcon={getWeatherIcon} />
-				
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-sm">
 					<ForecastHour className="col-span-2 md:col-start-2" currentHour={currentHour} currentData={currentWeatherData} forecastData={forecastWeatherData} getTime={getTime} getWeatherIcon={getWeatherIcon} />
 					<FeelsLike className="md:row-start-1 md:col-start-1" data={currentWeatherData} />
 					<WindInfo data={currentWeatherData} units={units} />
 					<Humidity data={currentWeatherData} />
 					<Pressure data={currentWeatherData} />
-					{ isDawn || isDay ? <Sunset data={currentWeatherData} getTime={getTime} /> : <Sunrise data={currentWeatherData} getTime={getTime} /> }
+					{ timeOfDay.isDawn || timeOfDay.isDay ? <Sunset data={currentWeatherData} getTime={getTime} /> : <Sunrise data={currentWeatherData} getTime={getTime} /> }
 				</div>
 			</div>
 		</SidebarProvider>
