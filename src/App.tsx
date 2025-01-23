@@ -129,7 +129,7 @@ function App() {
 				handleSearch={handleSearch}
 			 />
 			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
-			<div className="w-full flex flex-col -ml-10 text-white">
+			<div className="w-full flex flex-col -ml-10 text-slate-100">
 				<div className="hidden md:self-end md:relative md:flex md:items-center md:m-5">
 					<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
 				</div>
