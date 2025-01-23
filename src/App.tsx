@@ -17,6 +17,7 @@ import Humidity from "./widgets/Humidity";
 import Pressure from "./widgets/Pressure";
 import Sunset from "./widgets/Sunset";
 import Sunrise from "./widgets/Sunrise";
+import CurrentWeather from "./CurrentWeather";
 
 const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
 const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
@@ -137,13 +138,13 @@ function App() {
 				handleSearch={handleSearch}
 			 />
 			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
-			<div className="w-full flex flex-col items-center -ml-10">
+			<div className="w-full -ml-10 text-white">
 				<div className="hidden md:flex md:absolute md:top-0 md:right-0 md:m-5">
 					<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
 					<Input 
 						type="text" 
 						placeholder="Search"
-						className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 text-white ${setSearchInputBg()}`}
+						className={`pl-8 rounded-lg border-none focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500 ${setSearchInputBg()}`}
 						value={newLocation}
 						onChange={(e) => setNewLocation(e.target.value)}
 					/>
@@ -159,44 +160,15 @@ function App() {
 					</Button>
 				</div>
 
-				<div className="w-[200px] p-5 m-5 flex flex-col items-center text-white">
-					{ currentWeatherData ? (
-						<>
-							<h2 className="text-2xl">{location}</h2>
-							<h1 className="text-5xl">{Math.round(currentWeatherData.main.temp)}&deg;</h1>
-							<div id="weather-condition" className="w-full flex items-center justify-center">
-								<p className="mr-2">{currentWeatherData.weather[0].main}</p>
-								{ getWeatherIcon(currentWeatherData.weather[0].main, currentHour) }
-							</div>
-							<div className="w-3/4 flex justify-evenly">
-								<p>H: {Math.round(currentWeatherData.main.temp_max)}&deg;</p>
-								<p>L: {Math.round(currentWeatherData.main.temp_min)}&deg;</p>
-							</div>
-						</>
-					) : error ? (
-						<p className="text-3xl">&mdash; &mdash;</p>
-					) : (
-						<p>Loading...</p>
-					)}
-				</div>
-
-				<div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-white text-sm">
-					<ForecastHour className="col-span-2 md:col-start-2"
-						currentHour={currentHour}
-						currentData={currentWeatherData}
-						forecastData={forecastWeatherData}
-						getTime={getTime}
-						getWeatherIcon={getWeatherIcon}
-					/>
+				<CurrentWeather currentHour={currentHour} data={currentWeatherData} error={error} location={location} getWeatherIcon={getWeatherIcon} />
+				
+				<div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-sm">
+					<ForecastHour className="col-span-2 md:col-start-2" currentHour={currentHour} currentData={currentWeatherData} forecastData={forecastWeatherData} getTime={getTime} getWeatherIcon={getWeatherIcon} />
 					<FeelsLike className="md:row-start-1 md:col-start-1" data={currentWeatherData} />
 					<WindInfo data={currentWeatherData} units={units} />
 					<Humidity data={currentWeatherData} />
 					<Pressure data={currentWeatherData} />
-					{ isDawn || isDay ? 
-						<Sunset data={currentWeatherData} getTime={getTime} />
-						:
-						<Sunrise data={currentWeatherData} getTime={getTime} />
-					}
+					{ isDawn || isDay ? <Sunset data={currentWeatherData} getTime={getTime} /> : <Sunrise data={currentWeatherData} getTime={getTime} /> }
 				</div>
 			</div>
 		</SidebarProvider>
