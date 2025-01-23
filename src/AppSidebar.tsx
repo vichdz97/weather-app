@@ -1,9 +1,11 @@
-import { CircleX, Search } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from "./components/ui/sidebar";
-import { Input } from "./components/ui/input";
-import { Button } from "./components/ui/button";
+import SearchBar from "./SearchBar";
 
 interface Props {
+	timeOfDay: {
+        isDusk: boolean,
+        isNight: boolean
+    };
 	units: string;
 	timeFormat: number;
 	newLocation: string;
@@ -13,7 +15,7 @@ interface Props {
 	handleSearch: () => void;
 }
 
-function AppSidebar({ units, timeFormat, newLocation, setUnits, setTimeFormat, setNewLocation, handleSearch } : Props) {
+function AppSidebar({ timeOfDay, units, timeFormat, newLocation, setUnits, setTimeFormat, setNewLocation, handleSearch } : Props) {
 
 	const moveSwitchFor = (label: string) => {
 		switch (label) {
@@ -27,25 +29,8 @@ function AppSidebar({ units, timeFormat, newLocation, setUnits, setTimeFormat, s
       	<Sidebar>
         	<SidebarContent>
 				<SidebarGroup className="mt-5 md:hidden">
-					<SidebarGroupContent className="flex">
-						<Search size={18} strokeWidth={1} className="absolute translate-x-1/2 translate-y-1/2 text-slate-300" />
-						<Input 
-							type="text" 
-							placeholder="Search"
-							className={`text-white px-8 rounded-l-xl rounded-r-none border-none bg-blue-500/40 focus-visible:ring-4 focus-visible:ring-blue-500 placeholder:text-slate-300 caret-blue-500`}
-							value={newLocation}
-							onChange={(e) => setNewLocation(e.target.value)}
-						/>
-						<CircleX 
-							size={18} 
-							strokeWidth={1} 
-							className="absolute translate-x-1/2 translate-y-1/2 right-16 fill-slate-300 stroke-slate-500 active:fill-slate-300"
-							visibility={newLocation == '' ? 'hidden' : 'visible'}
-							onClick={() => setNewLocation('')}
-						/>
-						<Button onClick={handleSearch} className="bg-blue-600 rounded-l-none rounded-r-xl">
-							<Search />
-						</Button>
+					<SidebarGroupContent className="relative flex items-center">
+						<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
 					</SidebarGroupContent>
 				</SidebarGroup>
 				<SidebarGroup>

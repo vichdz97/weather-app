@@ -124,13 +124,15 @@ function App() {
 	return (
 		<SidebarProvider defaultOpen={false} className={`overflow-auto bg-gradient-to-t ${setBackgroundGradient()}`}>
 			<AppSidebar 
-				units={units} timeFormat={timeFormat} newLocation={newLocation} 
+				timeOfDay={timeOfDay} units={units} timeFormat={timeFormat} newLocation={newLocation} 
 				setUnits={setUnits} setTimeFormat={setTimeFormat} setNewLocation={setNewLocation}
 				handleSearch={handleSearch}
 			 />
 			<SidebarTrigger className="z-10 ml-3 mt-3 text-slate-300 hover:text-slate-300 active:text-slate-100 hover:bg-slate-100/10" />
-			<div className="w-full -ml-10 text-white">
-				<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
+			<div className="w-full flex flex-col -ml-10 text-white">
+				<div className="hidden md:self-end md:relative md:flex md:items-center md:m-5">
+					<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
+				</div>
 				<CurrentWeather currentHour={currentHour} data={currentWeatherData} error={error} location={location} getWeatherIcon={getWeatherIcon} />
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-sm">
 					<ForecastHour className="col-span-2 md:col-start-2" currentHour={currentHour} currentData={currentWeatherData} forecastData={forecastWeatherData} getTime={getTime} getWeatherIcon={getWeatherIcon} />
