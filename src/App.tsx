@@ -101,19 +101,14 @@ function App() {
 	const getWeatherIcon = (condition: string, hour: number) => {
 		const dawn = hour >= 6 && hour < 8;
 		const day = hour >= 8 && hour < 18;
-		const dusk = hour >= 18 && hour < 20;
-		const night = hour >= 20 || hour < 6;
-
 		switch (condition) {
-			case "Clear":
-				if (dawn || day) return <Sun fill="gold" stroke="gold" strokeWidth={1.5} />;
-				else return <MoonStar fill="white" strokeWidth={1.5} />;
-			case "Clouds": return night ? <CloudMoon fill="white" strokeWidth={1.5} /> : <Cloud fill="white" strokeWidth={1.5} />;
+			case "Clear": return (dawn || day) ? <Sun fill="gold" stroke="gold" strokeWidth={1.5} /> : <MoonStar fill="white" strokeWidth={1.5} />;
+			case "Clouds": return (dawn || day) ? <Cloud fill="white" strokeWidth={1.5} /> : <CloudMoon fill="white" strokeWidth={1.5} />;
 			case "Drizzle": return <CloudDrizzle strokeWidth={1.5} />;
 			case "Fog":
 			case "Haze":
 			case "Mist": return <CloudFog strokeWidth={1.5} />;
-			case "Rain": return night ? <CloudMoonRain strokeWidth={1.5} /> : <CloudRainWind strokeWidth={1.5} />;
+			case "Rain": return (dawn || day) ? <CloudRainWind strokeWidth={1.5} /> : <CloudMoonRain strokeWidth={1.5} />;
 			case "Snow": return <Snowflake strokeWidth={1.5} />;
 			default: return;
 		}
