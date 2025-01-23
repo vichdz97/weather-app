@@ -1,14 +1,22 @@
-import { Cloud, Search, Thermometer, Wind, Waves, Gauge, CloudRainWind, MoonStar, Sun, CircleX, Sunrise, Sunset, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle, Clock } from "lucide-react";
+import { Cloud, Search, CloudRainWind, MoonStar, Sun, CircleX, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import AppSidebar from "./AppSidebar";
+
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
+
 import CurrentWeatherData from "./interfaces/WeatherData";
 import ForecastWeatherData from "./interfaces/WeatherData";
-import axios from "axios";
-import { Input } from "./components/ui/input";
-import { Button } from "./components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
-import { Separator } from "./components/ui/separator";
-import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
-import AppSidebar from "./AppSidebar";
+
+import ForecastHour from "./widgets/ForecastHour";
+import FeelsLike from "./widgets/FeelsLike";
+import WindInfo from "./widgets/WindInfo";
+import Humidity from "./widgets/Humidity";
+import Pressure from "./widgets/Pressure";
+import Sunset from "./widgets/Sunset";
+import Sunrise from "./widgets/Sunrise";
 
 const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
 const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
@@ -114,12 +122,6 @@ function App() {
 		}
 	}
 
-	const getWindDirection = (direction: number): string => {
-		const directions = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW", "N"]
-		const index = Math.round((direction % 360) / 22.5);
-		return directions[index];
-	}
-
 	const getTime = (time: number) => {
 		return timeFormat == 12 ? 
 			new Date(time * 1000).toLocaleTimeString().replace(/:\d*\s/g, " ") 
@@ -179,170 +181,26 @@ function App() {
 				</div>
 
 				<div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-white text-sm">
-					{ currentWeatherData && forecastWeatherData && (
-						<>
-							<Card className="col-span-2 md:col-start-2">
-								<CardHeader>
-									<CardTitle className="flex gap-2">
-										<Clock strokeWidth={1.5} />
-										<span>24-HR FORECAST</span>
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="flex gap-4 overflow-scroll">
-									<div className="flex-1 min-w-10 flex flex-col items-center gap-4 font-semibold">
-										<span>Now</span>
-										{getWeatherIcon(currentWeatherData.weather[0].main, currentHour)}
-										<span>{Math.round(currentWeatherData.main.temp)}&deg;</span>
-									</div>
-									{ forecastWeatherData?.list.map((data: any, index: number) => {
-										return index <= 8 && (
-											<div key={index}>
-												<div className="flex-1 min-w-10 flex flex-col items-center gap-4 font-semibold">
-													<span>{getTime(data.dt).replace(":00 ", "")}</span>
-													{getWeatherIcon(data.weather[0].main, parseInt(new Date(data.dt * 1000).toTimeString().replace(/:.*/g, "")))}
-													<span>{Math.round(data.main.temp)}&deg;</span>
-												</div>
-												{ currentWeatherData.sys.sunrise > data.dt && currentWeatherData.sys.sunrise < forecastWeatherData?.list[index + 1].dt &&
-													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
-														<span>{getTime(currentWeatherData.sys.sunrise).replace(" ", "")}</span>
-														<Sunrise fill="gold" strokeWidth={1.5} />
-														<span>Sunrise</span>
-													</div>
-												}
-												{ currentWeatherData.sys.sunset > data.dt && currentWeatherData.sys.sunset < forecastWeatherData?.list[index + 1].dt &&
-													<div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2 font-semibold">
-														<span>{getTime(currentWeatherData.sys.sunset).replace(" ", "")}</span>
-														<Sunset fill="gold" strokeWidth={1.5} />
-														<span>Sunset</span>
-													</div>
-												}
-											</div>
-										)
-									})}
-								</CardContent>
-							</Card>
-							<Card className="relative md:row-start-1 md:col-start-1">
-								<CardHeader>
-									<CardTitle className="flex gap-1">
-										<Thermometer strokeWidth={1.5} className="-ml-1"/>
-										<span>FEELS LIKE</span>
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="text-3xl">
-									{Math.round(currentWeatherData.main.feels_like)}&deg;
-								</CardContent>
-								{ Math.round(currentWeatherData.main.feels_like) < Math.round(currentWeatherData.main.temp) && (
-									<CardFooter className="absolute bottom-0">Wind is making it feel colder.</CardFooter>
-								)}
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex gap-2">
-										<Wind strokeWidth={1.5} />
-										<span>WIND</span>
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div className="flex justify-between">
-										<p>Wind</p>
-										<p className="flex gap-1">
-											{Math.round(currentWeatherData.wind.speed)}
-											<span>{units == 'imperial' ? 'mph' : 'm/s'}</span>
-										</p>
-									</div>
-									<Separator className="my-3" />
-									<div className="flex justify-between">
-										<p>Gusts</p>
-										<p className="flex gap-1">
-											{Math.round(currentWeatherData.wind.gust) || 0}
-											<span >{units == 'imperial' ? 'mph' : 'm/s'}</span>
-										</p>
-									</div>
-									<Separator className="my-3" />
-									<div className="flex justify-between">
-										<p>Direction</p>
-										<p className="flex gap-1">
-											{currentWeatherData.wind.deg}°
-											<span>{getWindDirection(currentWeatherData.wind.deg)}</span>
-										</p>
-									</div>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex gap-2">
-										<Waves strokeWidth={1.5} />
-										<span>HUMIDITY</span>
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="text-3xl">
-									{Math.round(currentWeatherData.main.humidity)}&#37;
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex gap-2">
-										<Gauge strokeWidth={1.5} />
-										<span>PRESSURE</span>
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div className="flex justify-between gap-1 items-center">
-										<p>Ground Level</p>
-										<p className="flex gap-1">
-											{Math.round(currentWeatherData.main.grnd_level)}
-											<span>hPa</span>
-										</p>
-									</div>
-									<Separator className="my-3" />
-									<div className="flex justify-between gap-1 items-center">
-										<p>Sea Level</p>
-										<p className="flex gap-1">
-											{Math.round(currentWeatherData.main.sea_level)}
-											<span>hPa</span>
-										</p>
-									</div>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex gap-2">
-										{ isDawn || isDay ? (
-											<>
-												<Sunset strokeWidth={1.5} />
-												<span>SUNSET</span>
-											</>
-										) : (
-											<>
-												<Sunrise strokeWidth={1.5} />
-												<span>SUNRISE</span>
-											</>
-										)}
-									</CardTitle>
-								</CardHeader>
-								<CardContent className="text-3xl">
-									{ isDawn || isDay ? getTime(currentWeatherData.sys.sunset) : getTime(currentWeatherData.sys.sunrise)}
-								</CardContent>
-								<CardFooter className="flex gap-1">
-									{ isDawn || isDay ? (
-										<>
-											<span>Sunrise:</span>
-											{getTime(currentWeatherData.sys.sunrise)}
-										</>
-									) : (
-										<>
-											<span>Sunset:</span>
-											{getTime(currentWeatherData.sys.sunset)}
-										</>
-									) }
-								</CardFooter>
-							</Card>
-						</>
-					)}
+					<ForecastHour className="col-span-2 md:col-start-2"
+						currentHour={currentHour}
+						currentData={currentWeatherData}
+						forecastData={forecastWeatherData}
+						getTime={getTime}
+						getWeatherIcon={getWeatherIcon}
+					/>
+					<FeelsLike className="md:row-start-1 md:col-start-1" data={currentWeatherData} />
+					<WindInfo data={currentWeatherData} units={units} />
+					<Humidity data={currentWeatherData} />
+					<Pressure data={currentWeatherData} />
+					{ isDawn || isDay ? 
+						<Sunset data={currentWeatherData} getTime={getTime} />
+						:
+						<Sunrise data={currentWeatherData} getTime={getTime} />
+					}
 				</div>
 			</div>
 		</SidebarProvider>
-	)
+	);
 }
 
 export default App;
