@@ -45,12 +45,10 @@ function App() {
 				setError('');
 				const currentResponse = await axios.get(`${currentWeatherURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const currentData = currentResponse.data;
-				// console.log("currentData", currentData);
 				setCurrentWeatherData(currentData);
 
 				const forecastResponse = await axios.get(`${forecastURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const forecastData = forecastResponse.data;
-				console.log("forecastData", forecastData);
 				setForecastWeatherData(forecastData);
 			} catch (err: any) {
 				setCurrentWeatherData(null);
