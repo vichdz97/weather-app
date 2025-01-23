@@ -18,8 +18,8 @@ import Sunrise from "./widgets/Sunrise";
 import CurrentWeather from "./CurrentWeather";
 import SearchBar from "./SearchBar";
 
-const currentWeatherURL = 'http://api.openweathermap.org/data/2.5/weather';
-const forecastURL = 'http://api.openweathermap.org/data/2.5/forecast';
+const currentWeatherURL = 'https://api.openweathermap.org/data/2.5/weather';
+const forecastURL = 'https://api.openweathermap.org/data/2.5/forecast';
 
 const currentHour = new Date().getHours();
 const timeOfDay = {
