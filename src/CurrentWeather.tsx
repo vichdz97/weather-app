@@ -6,7 +6,7 @@ interface Props {
     data: CurrentWeatherData | null;
     error: string;
     location: string;
-    getWeatherIcon: (condition: string, timeOfDay: number) => ReactNode;
+    getWeatherIcon: (condition: string, hour: number) => ReactNode;
 }
 
 function CurrentWeather({ currentHour, data, error, location, getWeatherIcon }: Props) {

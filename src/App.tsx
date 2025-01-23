@@ -98,11 +98,11 @@ function App() {
 			return "from-blue-950/90 to-indigo-950 to-70%";
 	}
 
-	const getWeatherIcon = (condition: string, timeOfDay: number) => {
-		const dawn = timeOfDay >= 6 && timeOfDay < 8;
-		const day = timeOfDay >= 8 && timeOfDay < 18;
-		const dusk = timeOfDay >= 18 && timeOfDay < 20;
-		const night = timeOfDay >= 20 || timeOfDay < 6;
+	const getWeatherIcon = (condition: string, hour: number) => {
+		const dawn = hour >= 6 && hour < 8;
+		const day = hour >= 8 && hour < 18;
+		const dusk = hour >= 18 && hour < 20;
+		const night = hour >= 20 || hour < 6;
 
 		switch (condition) {
 			case "Clear":

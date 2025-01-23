@@ -10,7 +10,7 @@ interface Props {
     currentData: CurrentWeatherData | null;
     forecastData: ForecastWeatherData | null;
     getTime: (time: number) => string;
-    getWeatherIcon: (condition: string, timeOfDay: number) => ReactNode;
+    getWeatherIcon: (condition: string, hour: number) => ReactNode;
 }
 
 function ForecastHour({ className, currentHour, currentData, forecastData, getTime, getWeatherIcon }: Props) {
