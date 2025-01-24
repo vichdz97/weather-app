@@ -132,13 +132,13 @@ function App() {
 					<SearchBar timeOfDay={timeOfDay} newLocation={newLocation} setNewLocation={setNewLocation} handleSearch={handleSearch} />
 				</div>
 				<CurrentWeather currentHour={currentHour} data={currentWeatherData} error={error} location={location} getWeatherIcon={getWeatherIcon} />
-				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 text-sm">
-					<ForecastHour className="col-span-2 lg:col-start-2" currentHour={currentHour} currentData={currentWeatherData} forecastData={forecastWeatherData} getTime={getTime} getWeatherIcon={getWeatherIcon} />
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 text-sm">
+					<ForecastHour className="col-span-full lg:col-span-2 lg:col-start-2" currentHour={currentHour} currentData={currentWeatherData} forecastData={forecastWeatherData} getTime={getTime} getWeatherIcon={getWeatherIcon} />
 					<FeelsLike className="lg:row-start-1 lg:col-start-1" data={currentWeatherData} />
-					<WindInfo data={currentWeatherData} units={units} />
+					{ timeOfDay.isDawn || timeOfDay.isDay ? <Sunset data={currentWeatherData} getTime={getTime} /> : <Sunrise data={currentWeatherData} getTime={getTime} /> }
+					<WindInfo className="col-span-2 md:col-span-1" data={currentWeatherData} units={units} />
 					<Humidity data={currentWeatherData} />
 					<Pressure data={currentWeatherData} />
-					{ timeOfDay.isDawn || timeOfDay.isDay ? <Sunset data={currentWeatherData} getTime={getTime} /> : <Sunrise data={currentWeatherData} getTime={getTime} /> }
 				</div>
 			</div>
 		</SidebarProvider>
