@@ -4,7 +4,7 @@
 > Last Updated January 24, 2025
 
 ## Summary
-Inspired by Apple's layout and design, this responsive weather application displays current and forecast data using the [OpenWeather API](https://openweathermap.org).
+Inspired by Apple's weather interface, this user-friendly weather app provides real-time forecasts and detailed weather information using the [OpenWeather API](https://openweathermap.org).
 
 ## Live Demo
 Access the live demo [here](https://weather-app.victor-jr.com)!
