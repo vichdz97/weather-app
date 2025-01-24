@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CurrentWeatherData from "@/interfaces/WeatherData";
 import ForecastWeatherData from "@/interfaces/WeatherData";
@@ -6,15 +6,63 @@ import { Clock, Sunrise, Sunset } from "lucide-react";
 
 interface Props {
     className?: string;
-    currentHour: number;
     currentData: CurrentWeatherData | null;
     forecastData: ForecastWeatherData | null;
     getTime: (time: number) => string;
     getWeatherIcon: (condition: string, hour: number) => ReactNode;
 }
 
-function ForecastHour({ className, currentHour, currentData, forecastData, getTime, getWeatherIcon }: Props) {
-    return ( currentData && forecastData && 
+interface WeatherData {
+    time: string;
+    icon: ReactNode;
+    temp: string;
+}
+
+function ForecastHour({ className, currentData, forecastData, getTime, getWeatherIcon }: Props) {
+    const [weatherData, setWeatherData] = useState<Array<WeatherData>>([]);
+
+    useEffect(() => {
+        if (currentData && forecastData) {
+            const tempArr = [currentData, ...forecastData.list.slice(0, 10)];
+            const sunrise = get24HourTime(currentData.sys.sunrise);
+            const sunset = get24HourTime(currentData.sys.sunset);
+
+            let forecastArr: Array<WeatherData> = [];
+            for (let i = 0; i < tempArr.length - 1; i++) {
+                forecastArr.push({
+                    time: getTime(tempArr[i].dt).replace(":00 ", ""),
+                    icon: getWeatherIcon(tempArr[i].weather[0].main, parseInt(get24HourTime(tempArr[i].dt))),
+                    temp: `${Math.round(tempArr[i].main.temp).toString()}°`
+                });
+
+                const timeBefore = get24HourTime(tempArr[i].dt);
+                const timeAfter = get24HourTime(tempArr[i + 1].dt);
+                if (sunrise > timeBefore && sunrise < timeAfter) {
+                    forecastArr.push({
+                        time: getTime(currentData.sys.sunrise).replace(" ", ""),
+                        icon: <Sunrise fill="gold" strokeWidth={1.5} />,
+                        temp: "Sunrise"
+                    });
+                }
+                if (sunset > timeBefore && sunset < timeAfter) {
+                    forecastArr.push({
+                        time: getTime(currentData.sys.sunset).replace(" ", ""),
+                        icon: <Sunset fill="orange" strokeWidth={1.5} />,
+                        temp: "Sunset"
+                    });
+                }
+            }
+
+            setWeatherData(forecastArr);
+        }
+
+    }, [currentData, forecastData]);
+
+    const get24HourTime = (time: number) => {
+        return new Date(time * 1000).toTimeString().replace(/:.*/g, "");
+    }
+
+    return (
         <Card className={className}>
             <CardHeader>
                 <CardTitle className="flex gap-2">
@@ -23,35 +71,14 @@ function ForecastHour({ className, currentHour, currentData, forecastData, getTi
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex justify-between gap-4 overflow-scroll font-semibold">
-                <div className="flex-initial min-w-10 flex flex-col items-center gap-4">
-                    <span>Now</span>
-                    {getWeatherIcon(currentData.weather[0].main, currentHour)}
-                    <span>{Math.round(currentData.main.temp)}&deg;</span>
-                </div>
-                { forecastData.list.map((data: any, index: number) => {
-                    return index <= 8 && (
-                        <div key={index}>
-                            <div className="flex-1 min-w-10 flex flex-col items-center gap-4">
-                                <span>{getTime(data.dt).replace(":00 ", "")}</span>
-                                {getWeatherIcon(data.weather[0].main, parseInt(new Date(data.dt * 1000).toTimeString().replace(/:.*/g, "")))}
-                                <span>{Math.round(data.main.temp)}&deg;</span>
-                            </div>
-                            { currentData.sys.sunrise > data.dt && currentData.sys.sunrise < forecastData.list[index + 1].dt &&
-                                <div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2">
-                                    <span>{getTime(currentData.sys.sunrise).replace(" ", "")}</span>
-                                    <Sunrise fill="gold" strokeWidth={1.5} />
-                                    <span>Sunrise</span>
-                                </div>
-                            }
-                            { currentData.sys.sunset > data.dt && currentData.sys.sunset < forecastData.list[index + 1].dt &&
-                                <div className="flex-1 min-w-10 flex flex-col items-center gap-4 mx-2">
-                                    <span>{getTime(currentData.sys.sunset).replace(" ", "")}</span>
-                                    <Sunset fill="gold" strokeWidth={1.5} />
-                                    <span>Sunset</span>
-                                </div>
-                            }
+                { weatherData.map((data: WeatherData, index: number) => {
+                    return (
+                        <div key={index} className="flex-1 min-w-12 flex flex-col items-center gap-4">
+                            <span>{index == 0 ? "Now" : data.time}</span>
+                            {data.icon}
+                            <span>{data.temp}</span>
                         </div>
-                    )
+                    );
                 })}
             </CardContent>
         </Card>
