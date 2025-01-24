@@ -62,7 +62,7 @@ function ForecastHour({ className, currentData, forecastData, getTime, getWeathe
         return new Date(time * 1000).toTimeString().replace(/:.*/g, "");
     }
 
-    return (
+    return ( currentData && forecastData &&
         <Card className={className}>
             <CardHeader>
                 <CardTitle className="flex gap-2">
