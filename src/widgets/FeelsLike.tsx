@@ -9,7 +9,7 @@ interface Props {
 
 function FeelsLike({ className, data }: Props) {
     return ( data &&
-        <Card className={className + " relative"}>
+        <Card className={className}>
             <CardHeader>
                 <CardTitle className="flex gap-1">
                     <Thermometer strokeWidth={1.5} className="-ml-1"/>
@@ -20,7 +20,7 @@ function FeelsLike({ className, data }: Props) {
                 {Math.round(data.main.feels_like)}&deg;
             </CardContent>
             { Math.round(data.main.feels_like) < Math.round(data.main.temp) && (
-                <CardFooter className="absolute bottom-0">Wind is making it feel colder.</CardFooter>
+                <CardFooter>Wind is making it feel colder.</CardFooter>
             )}
         </Card>
     );
