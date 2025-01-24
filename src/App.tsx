@@ -50,6 +50,8 @@ function App() {
 				const forecastResponse = await axios.get(`${forecastURL}?q=${location}&units=${units}&appid=${import.meta.env.VITE_API_KEY}`);
 				const forecastData = forecastResponse.data;
 				setForecastWeatherData(forecastData);
+
+				setTimeFormat(timeFormat);
 			} catch (err: any) {
 				setCurrentWeatherData(null);
 				setForecastWeatherData(null);
@@ -59,7 +61,7 @@ function App() {
 		}
 
 		fetchWeather();
-	}, [location, units]);
+	}, [location, units, timeFormat]);
 
 	const formatLocation = (location: string): string => {
 		return location
