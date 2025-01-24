@@ -1,13 +1,13 @@
 # Weather App
 
 > [!NOTE]
-> Last Updated January 22, 2025
+> Last Updated January 24, 2025
 
 ## Summary
-Inspired by Apple's layout and design, this responsive weather application displays current and forecast data using the OpenWeather API.
+Inspired by Apple's layout and design, this responsive weather application displays current and forecast data using the [OpenWeather API](https://openweathermap.org).
 
 ## Live Demo
-[link]()
+Access the live demo [here](https://weather-app.victor-jr.com)!
 
 ## Technologies
 - [Vite](https://vite.dev/) (*v5.4.10*)
@@ -20,8 +20,7 @@ Inspired by Apple's layout and design, this responsive weather application displ
 
 ## Screenshots
 ### Desktop View
-<img src="" alt="Desktop view of Weather App" />
+<img src="src/assets/desktop.png" width="300" alt="Desktop view of Weather App" /> <img src="src/assets/desktop-side.png" width="300" alt="Desktop view of Weather App" />
 
 ### Mobile View
-<img src="" alt="Mobile view of Weather App" />
-
+<img src="src/assets/mobile.png" width="150" alt="Mobile view of Weather App" /> <img src="src/assets/mobile-side.png" width="150" alt="Mobile view of Weather App" />
