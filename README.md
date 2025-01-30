@@ -1,7 +1,7 @@
 # Weather App
 
 > [!NOTE]
-> Last Updated January 24, 2025
+> Last Updated January 29, 2025
 
 ## Summary
 Inspired by Apple's weather interface, this user-friendly weather app provides real-time forecasts and detailed weather information using the [OpenWeather API](https://openweathermap.org).
