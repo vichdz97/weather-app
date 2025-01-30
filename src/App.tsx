@@ -1,4 +1,4 @@
-import { Cloud, CloudRainWind, MoonStar, Sun, CloudFog, CloudMoon, CloudMoonRain, Snowflake, CloudDrizzle } from "lucide-react";
+import { Cloud, CloudRainWind, MoonStar, Sun, CloudFog, CloudMoon, Snowflake, CloudDrizzle, CloudLightning } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AppSidebar from "./AppSidebar";
@@ -105,10 +105,11 @@ function App() {
 			case "Clear": return (dawn || day) ? <Sun fill="gold" stroke="gold" strokeWidth={1.5} /> : <MoonStar fill="white" strokeWidth={1.5} />;
 			case "Clouds": return (dawn || day) ? <Cloud fill="white" strokeWidth={1.5} /> : <CloudMoon fill="white" strokeWidth={1.5} />;
 			case "Drizzle": return <CloudDrizzle strokeWidth={1.5} />;
+			case "Rain": return <CloudRainWind fill="white" stroke="lightblue" strokeWidth={1.5} />;
+			case "Thunderstorm": return <CloudLightning fill="gray" strokeWidth={1.5} />;
 			case "Fog":
 			case "Haze":
 			case "Mist": return <CloudFog strokeWidth={1.5} />;
-			case "Rain": return (dawn || day) ? <CloudRainWind strokeWidth={1.5} /> : <CloudMoonRain strokeWidth={1.5} />;
 			case "Snow": return <Snowflake strokeWidth={1.5} />;
 			default: return;
 		}
