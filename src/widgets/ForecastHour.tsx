@@ -61,7 +61,7 @@ function ForecastHour({ className, currentData, forecastData, getTime, getWeathe
     }, [currentData, forecastData]);
 
     const get24HourTime = (time: number) => {
-        return new Date(time * 1000).toTimeString().replace(/:.*/g, "");
+        return new Date(time * 1000).toTimeString().replace(/:\d\d\s.*/g, "");
     }
 
     return ( currentData && forecastData &&
